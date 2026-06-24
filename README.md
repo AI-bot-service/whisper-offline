@@ -82,19 +82,18 @@ python voice2text\voice2text.py
 
 Звук берётся с **динамика по умолчанию** (loopback) — видео/созвон должны играть через него.
 
-### Запуск без терминала (ярлык на рабочем столе)
+### Запуск без терминала
 
-```powershell
-$WshShell = New-Object -ComObject WScript.Shell
-$lnk = $WshShell.CreateShortcut("$env:USERPROFILE\Desktop\voice2text.lnk")
-$lnk.TargetPath       = "C:\путь\к\whisper-offline\venv\Scripts\pythonw.exe"
-$lnk.Arguments        = "C:\путь\к\whisper-offline\voice2text\voice2text.py"
-$lnk.WorkingDirectory = "C:\путь\к\whisper-offline\voice2text"
-$lnk.Save()
-```
+В папке лежит готовый запускатель **`voice2text/start.vbs`** — стартует приложение
+полностью без консоли. Пути внутри относительные (venv ищется в корне проекта),
+ничего править не надо.
 
-`pythonw.exe` запускает окно **без чёрной консоли**. Двойной клик по ярлыку — готово.
-Подставь реальный путь к папке проекта.
+- Двойной клик по `start.vbs` — окно откроется без чёрного терминала.
+- Для ярлыка на рабочем столе: ПКМ по `start.vbs` → **Отправить → Рабочий стол (создать ярлык)**.
+  Иконку ярлыка можно сменить в его свойствах.
+
+> `start.vbs` запускает `pythonw.exe` из venv в скрытом режиме. Если venv не создан —
+> покажет подсказку.
 
 ---
 
