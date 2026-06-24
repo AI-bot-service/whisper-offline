@@ -24,7 +24,9 @@ whisper-offline/
 │   ├── install.vbs          # установщик: venv + зависимости + ярлык
 │   └── requirements.txt     # зависимости только voice2text
 ├── video2text/
-│   ├── video2text.py        # YouTube → .txt + .srt
+│   ├── video2text.py        # GUI: YouTube → out/{название}/.wav/.txt/.srt
+│   ├── video2text.vbs       # запуск без терминала (для ярлыка)
+│   ├── out/                 # результаты (создаётся сам, в .gitignore)
 │   └── requirements.txt     # зависимости только video2text
 ├── requirements.txt      # мета: ставит оба (для разработки)
 ├── .gitignore
@@ -110,18 +112,34 @@ python voice2text\voice2text.py
 
 ## video2text — YouTube в текст
 
-1. Залогинься в YouTube в **Firefox** (Chrome / Edge не работают — App-Bound шифрование куки).
-   Альтернатива: положи рядом `cookies.txt` (расширение «Get cookies.txt LOCALLY»).
-2. Запуск:
-   ```powershell
-   venv\Scripts\activate
-   python video2text\video2text.py "https://youtube.com/watch?v=..."        # авто-язык
-   python video2text\video2text.py "https://youtube.com/watch?v=..." ru     # форс язык
-   ```
-3. Рядом со скриптом появятся:
-   - `{название видео}.wav` — аудио (повторно не качается, если уже есть)
-   - `{название видео}.txt` — чистый текст
-   - `{название видео}.srt` — фразы с таймингами
+**Подготовка:** залогинься в YouTube в **Firefox** (Chrome / Edge не работают —
+App-Bound шифрование куки). Альтернатива: положи `cookies.txt` в папку `video2text/`
+(расширение «Get cookies.txt LOCALLY»). Для YouTube нужен **deno** (`winget install denoland.deno`).
+
+### Запуск с окном (GUI)
+
+```powershell
+venv\Scripts\activate
+python video2text\video2text.py
+```
+Или без терминала — двойной клик по **`video2text/video2text.vbs`** (ярлык: ПКМ →
+Отправить → Рабочий стол).
+
+В окне: вставь ссылку → **СТАРТ** (превращается в **СТОП**) → снизу шкала прогресса
+(скачивание 0–50 %, транскрипция 50–100 %).
+
+Результат → **`video2text/out/{название видео}/`**:
+- `{название}.wav` — аудио (повторно не качается, если уже есть)
+- `{название}.txt` — чистый текст
+- `{название}.srt` — фразы с таймингами
+
+### Запуск из терминала (CLI)
+
+```powershell
+python video2text\video2text.py "https://youtube.com/watch?v=..."        # авто-язык
+python video2text\video2text.py "https://youtube.com/watch?v=..." ru     # форс язык
+```
+Файлы пишутся туда же — `out/{название}/`.
 
 ---
 

@@ -18,6 +18,7 @@ huggingface_cache/
 cookies.txt
 
 # результаты работы
+out/
 *.wav
 *.mp3
 *.webm
