@@ -1,0 +1,8 @@
+faster-whisper
+soundcard
+keyboard
+pyperclip
+yt-dlp
+numpy
+nvidia-cublas-cu12
+nvidia-cudnn-cu12==8.9.7.29

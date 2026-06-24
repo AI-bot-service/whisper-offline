@@ -1,0 +1,32 @@
+# venv
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.Python
+
+# модели и кэш HuggingFace (большие, качаются сами)
+huggingface_cache/
+*.bin
+
+# КУКИ — секрет, НИКОГДА не коммитить (доступ к твоему YouTube-аккаунту)
+cookies.txt
+
+# результаты работы
+*.wav
+*.mp3
+*.webm
+*.srt
+*.txt
+!requirements.txt
+
+# IDE / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
