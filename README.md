@@ -17,6 +17,7 @@
 
 ```
 whisper-offline/
+├── config.py             # ВСЕ настройки в одном месте (модель, кэш, язык, хоткей, куки)
 ├── voice2text/
 │   └── voice2text.py     # GUI: звук системы → текст в буфер (хоткей Ctrl+Space)
 ├── video2text/
@@ -114,15 +115,21 @@ $lnk.Save()
 
 ---
 
-## Настройки (вверху каждого скрипта)
+## Настройки — всё в `config.py`
 
-| Параметр | Где | Назначение |
-|---|---|---|
-| `MODEL` | оба | модель Whisper (`...turbo-ct2` / `large-v3`) |
-| `HF_HOME` | оба | папка кэша моделей |
-| `LANG` | оба | язык (`ru`, `en`, пусто = авто) |
-| `HOTKEY` | voice2text | горячая клавиша |
-| `BROWSER` / `COOKIES_FILE` | video2text | источник куки YouTube |
+Один файл в корне, оба инструмента берут параметры оттуда:
+
+| Параметр | Назначение |
+|---|---|
+| `MODEL` | модель Whisper (`...turbo-ct2` / `large-v3`) |
+| `HF_HOME` | папка кэша моделей |
+| `LANG` | язык (`"ru"`, `"en"`, `None` = авто) |
+| `DEVICE` / `COMPUTE_TYPE` | `cuda`+`float16` (GPU) или `cpu`+`int8` |
+| `HOTKEY` | горячая клавиша (voice2text) |
+| `BROWSER` / `COOKIES_FILE` | источник куки YouTube (video2text) |
+
+Меняешь значение в `config.py` — применяется к обоим. Функция `config.setup()` готовит
+кэш и GPU-библиотеки (вызывается скриптами автоматически).
 
 ---
 

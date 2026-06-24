@@ -1,24 +1,13 @@
 import sys, os, threading
 from collections import deque
+
+# настройки из корневого config.py + подготовка окружения (кэш + GPU DLL)
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import config
+config.setup()
+
 import numpy as np
 import tkinter as tk
-
-# === НАСТРОЙКИ ===
-HOTKEY      = "ctrl+space"
-LANG        = "ru"
-MODEL       = "deepdml/faster-whisper-large-v3-turbo-ct2"
-SAMPLE_RATE = 16000
-
-# кэш моделей + GPU DLL
-os.environ["HF_HOME"] = r"D:\huggingface_cache"
-base = os.path.abspath(os.path.join(os.path.dirname(sys.executable), "..",
-                                    "Lib", "site-packages", "nvidia"))
-for sub in ("cudnn", "cublas"):
-    p = os.path.join(base, sub, "bin")
-    if os.path.isdir(p):
-        os.add_dll_directory(p)
-        os.environ["PATH"] = p + os.pathsep + os.environ["PATH"]
-
 import soundcard as sc
 import keyboard
 import pyperclip
@@ -44,7 +33,7 @@ def record_loop():
     global level
     spk = sc.default_speaker()
     lb = sc.get_microphone(spk.name, include_loopback=True)
-    with lb.recorder(samplerate=SAMPLE_RATE) as rec:
+    with lb.recorder(samplerate=config.SAMPLE_RATE) as rec:
         while True:
             chunk = rec.record(numframes=1024)
             mono = chunk.mean(axis=1) if chunk.ndim > 1 else chunk
@@ -74,7 +63,7 @@ def transcribe():
         root.after(0, lambda: set_status("пусто", SUB)); return
     audio = np.concatenate(frames, axis=0)
     audio = (audio.mean(axis=1) if audio.ndim > 1 else audio).astype(np.float32)
-    segs, info = model.transcribe(audio, language=LANG,
+    segs, info = model.transcribe(audio, language=config.LANG,
                                   vad_filter=True, condition_on_previous_text=False)
     text = " ".join(s.text.strip() for s in segs).strip()
     if text:
@@ -87,8 +76,9 @@ def transcribe():
 
 def load_model():
     global model
-    model = WhisperModel(MODEL, device="cuda", compute_type="float16")
-    root.after(0, lambda: set_status(f"готов  ·  {HOTKEY.upper()}", SUB))
+    model = WhisperModel(config.MODEL, device=config.DEVICE,
+                         compute_type=config.COMPUTE_TYPE)
+    root.after(0, lambda: set_status(f"готов  ·  {config.HOTKEY.upper()}", SUB))
 
 
 # === GUI ===
@@ -169,6 +159,6 @@ def update_wave():
 draw_button()
 threading.Thread(target=record_loop, daemon=True).start()
 threading.Thread(target=load_model, daemon=True).start()
-keyboard.add_hotkey(HOTKEY, lambda: root.after(0, toggle))
+keyboard.add_hotkey(config.HOTKEY, lambda: root.after(0, toggle))
 update_wave()
 root.mainloop()
