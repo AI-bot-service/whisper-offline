@@ -120,6 +120,14 @@ python voice2text\voice2text.py
 App-Bound шифрование куки). Альтернатива: положи `cookies.txt` в папку `video2text/`
 (расширение «Get cookies.txt LOCALLY»). Для YouTube нужен **deno** (`winget install denoland.deno`).
 
+> **Где берутся куки Firefox.** yt-dlp читает их напрямую из профиля, ничего
+> экспортировать не надо — файл `cookies.sqlite`:
+> ```
+> %APPDATA%\Mozilla\Firefox\Profiles\<профиль>.default-release\cookies.sqlite
+> ```
+> Профиль находится автоматически. Firefox не шифрует куки (в отличие от Chrome/Edge),
+> поэтому работает «на лету» — главное быть залогиненным в YouTube.
+
 ### Запуск с окном (GUI)
 
 ```powershell
