@@ -1,8 +1,4 @@
-faster-whisper
-soundcard
-keyboard
-pyperclip
-yt-dlp
-numpy
-nvidia-cublas-cu12
-nvidia-cudnn-cu12==8.9.7.29
+# Общий набор — ставит зависимости обоих инструментов (для разработки).
+# Для отдельной установки используй voice2text/requirements.txt или video2text/requirements.txt
+-r voice2text/requirements.txt
+-r video2text/requirements.txt

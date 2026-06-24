@@ -10,7 +10,7 @@ Set sh  = CreateObject("WScript.Shell")
 
 scriptDir = fso.GetParentFolderName(WScript.ScriptFullName)   ' ...\voice2text
 root      = fso.GetParentFolderName(scriptDir)                ' ...\whisper-offline
-reqFile   = root & "\requirements.txt"
+reqFile   = scriptDir & "\requirements.txt"   ' только зависимости voice2text
 venvDir   = root & "\venv"
 launcher  = scriptDir & "\voice2text.vbs"
 
@@ -42,8 +42,8 @@ bat.WriteLine ") else ( echo venv уже существует, пропуска�
 bat.WriteLine "call venv\Scripts\activate"
 bat.WriteLine "echo === Обновляю pip ==="
 bat.WriteLine "python -m pip install --upgrade pip"
-bat.WriteLine "echo === Ставлю зависимости (несколько минут) ==="
-bat.WriteLine "pip install -r requirements.txt || (echo [ОШИБКА] установка зависимостей не удалась & pause & exit /b 1)"
+bat.WriteLine "echo === Ставлю зависимости voice2text (несколько минут) ==="
+bat.WriteLine "pip install -r """ & reqFile & """ || (echo [ОШИБКА] установка зависимостей не удалась & pause & exit /b 1)"
 bat.WriteLine "echo."
 bat.WriteLine "echo === Установка зависимостей завершена ==="
 bat.Close

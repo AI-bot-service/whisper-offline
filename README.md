@@ -17,19 +17,21 @@
 
 ```
 whisper-offline/
-├── config.py             # ВСЕ настройки в одном месте (модель, кэш, язык, хоткей, куки)
+├── config.py             # ВСЕ настройки (модель, кэш, язык, хоткей, куки)
 ├── voice2text/
-│   ├── voice2text.py     # GUI: звук системы → текст в буфер (хоткей Ctrl+Space)
-│   ├── voice2text.vbs    # запуск без терминала (для ярлыка)
-│   └── install.vbs       # установщик: venv + зависимости + ярлык
+│   ├── voice2text.py        # GUI: звук системы → текст в буфер (Ctrl+Space)
+│   ├── voice2text.vbs       # запуск без терминала (для ярлыка)
+│   ├── install.vbs          # установщик: venv + зависимости + ярлык
+│   └── requirements.txt     # зависимости только voice2text
 ├── video2text/
-│   └── video2text.py     # YouTube → .txt + .srt
-├── requirements.txt      # общие зависимости (один venv на оба)
+│   ├── video2text.py        # YouTube → .txt + .srt
+│   └── requirements.txt     # зависимости только video2text
+├── requirements.txt      # мета: ставит оба (для разработки)
 ├── .gitignore
 └── README.md
 ```
 
-Оба инструмента используют **один общий venv** в корне и **один кэш моделей** — модель скачивается единожды.
+Оба инструмента используют **один общий venv** в корне и **один кэш моделей** — модель скачивается единожды. Зависимости разнесены по подпроектам (voice2text не тянет `yt-dlp`, video2text не тянет GUI-библиотеки).
 
 ---
 

@@ -1,0 +1,8 @@
+# voice2text — звук системы в текст (self-contained)
+faster-whisper
+numpy
+nvidia-cublas-cu12
+nvidia-cudnn-cu12==8.9.7.29
+soundcard
+keyboard
+pyperclip

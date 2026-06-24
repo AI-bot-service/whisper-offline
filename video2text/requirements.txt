@@ -1,0 +1,6 @@
+# video2text — YouTube в текст (self-contained)
+faster-whisper
+numpy
+nvidia-cublas-cu12
+nvidia-cudnn-cu12==8.9.7.29
+yt-dlp
