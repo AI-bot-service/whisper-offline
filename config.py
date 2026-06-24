@@ -5,7 +5,7 @@
 import sys, os
 
 # ===== ОБЩЕЕ =====
-HF_HOME      = r"D:\huggingface_cache"                       # папка кэша моделей
+HF_HOME      = r"D:\cache\huggingface_cache"                 # папка кэша моделей
 MODEL        = "deepdml/faster-whisper-large-v3-turbo-ct2"   # модель Whisper
 LANG         = "ru"          # язык: "ru", "en" или None = автоопределение
 DEVICE       = "cuda"        # "cuda" = GPU, "cpu" = без видеокарты
