@@ -153,6 +153,7 @@ def run_gui():
 
     running = {"on": False}
     cancel  = {"flag": False}
+    state   = {"outdir": None}
 
     root = tk.Tk()
     root.title("Video → Text")
@@ -160,7 +161,7 @@ def run_gui():
     root.resizable(False, False)
     root.attributes("-topmost", True)
 
-    W, H = 500, 230
+    W, H = 500, 285
     sw = root.winfo_screenwidth(); sh = root.winfo_screenheight()
     root.geometry(f"{W}x{H}+{(sw - W)//2}+{(sh - H)//2}")
 
@@ -175,10 +176,34 @@ def run_gui():
                      highlightcolor=ACCENT)
     entry.pack(fill="x", padx=20, ipady=7, pady=(12, 8))
 
+    # --- строка настроек: язык + открыть папку ---
+    row = tk.Frame(root, bg=BG)
+    row.pack(fill="x", padx=20)
+
+    tk.Label(row, text="язык:", bg=BG, fg=SUB, font=("Segoe UI", 9)).pack(side="left")
+    LANGS = {"авто": None, "ru": "ru", "en": "en"}
+    langvar = tk.StringVar(value="авто")
+    om = tk.OptionMenu(row, langvar, *LANGS.keys())
+    om.config(bg=CARD, fg=TXT, activebackground=EDGE, activeforeground=TXT,
+              relief="flat", bd=0, highlightthickness=0, font=("Segoe UI", 9),
+              cursor="hand2", width=5)
+    om["menu"].config(bg=CARD, fg=TXT, activebackground=ACCENT)
+    om.pack(side="left", padx=(6, 0))
+
+    def open_folder():
+        d = state["outdir"]
+        if d and os.path.isdir(d):
+            os.startfile(d)
+    open_btn = tk.Button(row, text="Открыть папку", command=open_folder,
+                         bg=CARD, fg=SUB, relief="flat", bd=0,
+                         activebackground=EDGE, activeforeground=TXT,
+                         font=("Segoe UI", 9), cursor="hand2", state="disabled")
+    open_btn.pack(side="right")
+
     btn = tk.Button(root, text="СТАРТ", bg=ACCENT, fg="white",
                     font=("Segoe UI Semibold", 12), relief="flat", bd=0,
                     activebackground=ACCENT, cursor="hand2", height=2)
-    btn.pack(fill="x", padx=20)
+    btn.pack(fill="x", padx=20, pady=(10, 0))
 
     PW, PH = W - 40, 10
     prog = tk.Canvas(root, width=PW, height=PH, bg=CARD, highlightthickness=0)
@@ -203,20 +228,26 @@ def run_gui():
         running["on"] = False
         btn.config(text="СТАРТ", bg=ACCENT)
         entry.config(state="normal")
+        om.config(state="normal")
 
     def to_running():
         running["on"] = True
         cancel["flag"] = False
         btn.config(text="СТОП", bg=REC)
         entry.config(state="disabled")
+        om.config(state="disabled")
+        open_btn.config(state="disabled")
         set_progress(0)
 
-    def worker(url):
+    def worker(url, lang):
         try:
             out = process(url,
                           progress_cb=lambda p: ui(set_progress, p),
                           status_cb=lambda s: ui(set_status, s, SUB),
-                          cancel_cb=lambda: cancel["flag"])
+                          cancel_cb=lambda: cancel["flag"],
+                          lang=lang)
+            state["outdir"] = out
+            ui(open_btn.config, {"state": "normal", "fg": TXT})
             ui(set_status, "✓ готово: out\\" + os.path.basename(out), OK)
         except Cancelled:
             ui(set_status, "остановлено", SUB)
@@ -236,7 +267,8 @@ def run_gui():
         if not url:
             set_status("вставь ссылку", REC); return
         to_running()
-        threading.Thread(target=worker, args=(url,), daemon=True).start()
+        lang = LANGS[langvar.get()]
+        threading.Thread(target=worker, args=(url, lang), daemon=True).start()
 
     btn.config(command=on_click)
 
